@@ -3,31 +3,48 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
 import pandas as pd
+from scraper import TweetCollector
+from config import api_key, api_secret
+
+tweets = TweetCollector(api_key, api_secret)
+data = tweets.get_tweets('#ETH','en',1000)
+data = tweets.find_sentiment(data)
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
+
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
-
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+polarity_fig = px.histogram(data, 'polarity')
+subjectivity_fig = px.histogram(data, 'subjectivity')
 
 app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
+
+    html.H1(children='Crypto Sentiment Analyser'),
+
+    dcc.Dropdown(
+        id='slct-crypto',
+        options=[
+            {'label':'Ethereum','value':'#ETH'},
+            {'label':'Bitcoin','value':'#BTC'},
+            {'label':'Chainlink','value':'#LINK'},
+            {'label':'Ada','value':'#ADA'}
+        ]
+    ),
 
     html.Div(children='''
-        Dash: A web application framework for Python.
+        Ethereum
     '''),
 
     dcc.Graph(
-        id='example-graph',
-        figure=fig
+        id='polarity_fig',
+        figure=polarity_fig
+    ),
+
+    dcc.Graph(
+        id='subjectivity_fig',
+        figure=subjectivity_fig
     )
 ])
 

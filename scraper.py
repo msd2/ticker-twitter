@@ -13,7 +13,7 @@ class TweetCollector:
         self.auth = tweepy.AppAuthHandler(self.api_key, self.api_secret)
         self.api = tweepy.API(self.auth)
     
-    def deEmojify(self, text):
+    def __deEmojify(self, text):
         regrex_pattern = re.compile(pattern = "["
             u"\U0001F600-\U0001F64F"  # emoticons
             u"\U0001F300-\U0001F5FF"  # symbols & pictographs
@@ -22,9 +22,9 @@ class TweetCollector:
                                "]+", flags = re.UNICODE)
         return regrex_pattern.sub(r'',text)
 
-    def clean(self, tweet):
+    def __clean(self, tweet):
         tweet = tweet.strip(' ')
-        tweet = self.deEmojify(tweet)
+        tweet = self.__deEmojify(tweet)
         tweet = re.sub(r'^RT[\s]+', '', tweet)
         tweet = re.sub(r'https?:\/\/.*[\r\n]*', '', tweet)
         tweet = re.sub(r'#', '', tweet)
@@ -38,7 +38,11 @@ class TweetCollector:
         for tweet in tweepy.Cursor(self.api.search, q=q, lang=lang).items(items):
             d['tweet'].append(tweet.text)
             d['created'].append(tweet.created_at)
-            d['id'].append(tweet.id)
         df = pd.DataFrame(d)
-        df['tweet'] = df['tweet'].apply(self.clean)
+        df['tweet'] = df['tweet'].apply(self.__clean)
+        return df
+
+    def find_sentiment(self, df):
+        df['polarity'] = df['tweet'].apply(lambda x: TextBlob(x).sentiment.polarity)
+        df['subjectivity'] = df['tweet'].apply(lambda x: TextBlob(x).sentiment.subjectivity)
         return df
