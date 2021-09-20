@@ -1,4 +1,4 @@
-from scraper import authenticate, return_politician_handles, tweet_grabber, upload_to_bucket
+from scrape_functions import authenticate, return_politician_handles, tweet_grabber, upload_to_bucket
 from config import api_key, api_secret
 from datetime import date
 import pandas as pd
