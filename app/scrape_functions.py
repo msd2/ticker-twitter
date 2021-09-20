@@ -2,7 +2,7 @@ import tweepy
 import pandas as pd
 from collections import defaultdict
 from urllib.request import Request, urlopen
-from io import StringIO
+from io import StringIO, BytesIO
 
 
 
@@ -14,8 +14,16 @@ def authenticate(api_key, api_secret):
 
 
 
-def download_from_bucket():
-    return 'a'
+def read_from_bucket(bucket):
+    frames = []
+    files  = list(bucket.list_blobs())
+    for file in files:
+        blob = bucket.blob(file.name)
+        data = pd.read_csv(BytesIO(blob.download_as_string()), encoding='utf-8')
+        frames.append(data)
+    data = pd.concat(frames)
+    return data
+
 
 
 
@@ -39,9 +47,8 @@ def tweet_grabber(twitter_handles, api, number_of_tweets, since_id):
 
 
 
-def upload_to_bucket(blob_name, source_file_name, storage_client, bucket_name):
+def upload_to_bucket(blob_name, source_file_name, bucket):
     print('Uploading to bucket.')
-    bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(blob_name)
     blob.upload_from_filename(source_file_name)
     print(
