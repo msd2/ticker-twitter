@@ -1,6 +1,7 @@
 from scrape_functions import authenticate, return_politician_handles, tweet_grabber, upload_to_bucket
 from config import api_key, api_secret
 from datetime import date
+from google.cloud import storage
 import pandas as pd
 
 today = date.today()
@@ -9,6 +10,9 @@ today = today.strftime("%Y_%m_%d")
 api = authenticate(api_key, api_secret)
 politician_twitter_handles = return_politician_handles()
 batchsize = 50
+
+storage_client = storage.Client.from_service_account_json(
+        'creds.json')
 
 frames = []
 for i in range(0, len(politician_twitter_handles), batchsize):

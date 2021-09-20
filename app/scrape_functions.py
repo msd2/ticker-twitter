@@ -1,7 +1,6 @@
 import tweepy
 import pandas as pd
 from collections import defaultdict
-from google.cloud import storage
 from urllib.request import Request, urlopen
 from io import StringIO
 
@@ -15,14 +14,18 @@ def authenticate(api_key, api_secret):
 
 
 
+def download_from_bucket():
+    return 'a'
 
-def tweet_grabber(twitter_handles, api, number_of_tweets):
+
+
+def tweet_grabber(twitter_handles, api, number_of_tweets, since_id):
     d = defaultdict(list)
     print('Scraping tweets. Handle:')
     for user in twitter_handles:
         print(user)
         try:
-            for tweet in tweepy.Cursor(api.user_timeline, screen_name=user).items(number_of_tweets):
+            for tweet in tweepy.Cursor(api.user_timeline, screen_name=user, since_id=since_id).items(number_of_tweets):
                 d['id'].append(tweet.id)
                 d['text'].append(tweet.text)
                 d['created'].append(tweet.created_at)
@@ -36,16 +39,11 @@ def tweet_grabber(twitter_handles, api, number_of_tweets):
 
 
 
-
-def upload_to_bucket(blob_name, source_file_name, bucket_name):
+def upload_to_bucket(blob_name, source_file_name, storage_client, bucket_name):
     print('Uploading to bucket.')
-    storage_client = storage.Client.from_service_account_json(
-        'creds.json')
-
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(blob_name)
     blob.upload_from_filename(source_file_name)
-
     print(
         "File {} uploaded to {}.".format(
             source_file_name, blob_name
