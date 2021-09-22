@@ -59,7 +59,7 @@ def upload_to_bucket(blob_name, source_file_name, bucket):
 
 
 
-def return_politician_handles():
+def return_politician_handles(option='list'):
     req = Request('https://www.politics-social.com/api/list/csv/followers', headers={'User-Agent': 'Mozilla/5.0'})
     webpage = urlopen(req).read()
     s=str(webpage,'utf-8')
@@ -67,4 +67,7 @@ def return_politician_handles():
     df=pd.read_csv(data)
     politician_handles = df['Screen name'].apply(lambda x: x[1:])
     print('Politician twitter handles imported.\n')
-    return politician_handles
+    if option=='list':
+        return politician_handles
+    else:
+        return df

@@ -16,7 +16,7 @@ print(read_from_bucket(bucket=bucket))
 
 
 # api = authenticate(api_key, api_secret)
-# politician_twitter_handles = return_politician_handles()
+# politician_twitter_handles = return_politician_handles(option='list')
 # batchsize = 50
 
 # frames = []
