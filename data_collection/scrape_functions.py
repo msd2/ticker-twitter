@@ -70,7 +70,8 @@ def return_politician_handles(option='list'):
     data = StringIO(s) 
     df=pd.read_csv(data)
     df['Name'] = df['Name'].apply(lambda x: x.rstrip())
-    politician_handles = df['Screen name'].apply(lambda x: x[1:])
+    df['Screen name'] = df['Screen name'].apply(lambda x: x[1:])
+    politician_handles = df['Screen name']
     print('Politician twitter handles imported.\n')
 
     if option=='list':

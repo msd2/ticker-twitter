@@ -17,9 +17,10 @@ data.drop('id', axis=1, inplace=True)
 data['user'] = data['user'].astype(str)
 
 politicians = return_politician_handles(option='all')
-# politicians['Name'] = politicians['Name'].apply(lambda x: x.rstrip())
+print(politicians.sort_values(by='Screen name').head())
 
-data = data[['user','text','created']].sort_values(by='created', ascending=False)
+data = data.merge(politicians[['Name','Screen name']], how='left', left_on='user', right_on='Screen name')
+print(data.sort_values(by='user').head())
 
 
 # Title
@@ -54,4 +55,4 @@ change = int(politicians[politicians['Name']==selected_user]['New followers in l
 st.write("Selected politician: "+selected_user)
 with st.container():
     st.metric(label="Followers 24hr change", value=followers, delta=change)
-    st.table(data[data['user']==selected_user][['text','created']])
+    st.table(data[data['Name']==selected_user][['text','created']])

@@ -13,12 +13,6 @@ bucket_name = 'uk-gov-tweets-14289'
 storage_client = storage.Client.from_service_account_json('creds.json')
 bucket = storage_client.get_bucket(bucket_name)
 
-
-# Pull in the political twitter accounts.
-# It does this from https://www.politics-social.com/api/list/csv/followers
-# politician_twitter_handles = return_politician_handles(option='list')
-
-
 # Authenticate with the twitter API.
 api = authenticate(api_key, api_secret)
 
