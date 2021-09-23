@@ -27,19 +27,19 @@ def read_from_bucket(bucket):
 
 
 
-def tweet_grabber(twitter_handles, api, number_of_tweets, since_id):
+def tweet_grabber(twitter_screen_names, api, number_of_tweets):
     d = defaultdict(list)
-    print('Scraping tweets. Handle:')
-    for user in twitter_handles:
-        print(user)
+    print('Scraping tweets...\n\n')
+    for i, user in enumerate(twitter_screen_names):
+        print(str(i) / str(len(twitter_screen_names)))
         try:
-            for tweet in tweepy.Cursor(api.user_timeline, screen_name=user, since_id=since_id).items(number_of_tweets):
+            for tweet in tweepy.Cursor(api.user_timeline, screen_name=user).items(number_of_tweets):
                 d['id'].append(tweet.id)
                 d['text'].append(tweet.text)
                 d['created'].append(tweet.created_at)
-                d['user'].append(tweet.user.name)
+                d['user'].append(tweet.user.screen_name)
         except tweepy.error.TweepError:
-            print("user doesn't exist")
+            print("\n\nUser doesn't exist:\n\n"+user)
             pass
     tweets = pd.DataFrame(d)
     print('Tweets scraped.\n')
