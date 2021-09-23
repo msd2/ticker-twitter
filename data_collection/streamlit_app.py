@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scrape_functions import read_from_bucket, return_politician_handles
 
-
+# read_from_bucket = st.cache(read_from_bucket)
+return_politician_handles =  st.cache(return_politician_handles)
 
 
 bucket_name = 'uk-gov-tweets-14289'
@@ -16,7 +17,7 @@ data.drop('id', axis=1, inplace=True)
 data['user'] = data['user'].astype(str)
 
 politicians = return_politician_handles(option='all')
-politicians['Name'] = politicians['Name'].apply(lambda x: x.rstrip())
+# politicians['Name'] = politicians['Name'].apply(lambda x: x.rstrip())
 
 data = data[['user','text','created']].sort_values(by='created', ascending=False)
 
