@@ -34,11 +34,11 @@ def tweet_grabber(names_and_ids, api, number_of_tweets):
         print(row['user']+':  '+str(i)+'/'+str(len(names_and_ids)))
         new_tweets = 0
         try:
-            tweets = tweepy.Cursor(api.user_timeline, screen_name=row['user'], since_id=row['id']).items(number_of_tweets)
+            tweets = tweepy.Cursor(api.user_timeline, screen_name=row['user'], since_id=row['id'], tweet_mode='extended').items(number_of_tweets)
             for tweet in tweets:
                 new_tweets+=1
                 d['id'].append(tweet.id)
-                d['text'].append(tweet.text)
+                d['text'].append(tweet.full_text)
                 d['created'].append(tweet.created_at)
                 d['user'].append(tweet.user.screen_name)
         except tweepy.error.TweepError:
