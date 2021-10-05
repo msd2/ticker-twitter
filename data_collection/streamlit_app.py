@@ -9,7 +9,7 @@ return_politician_handles =  st.cache(return_politician_handles)
 
 
 bucket_name = 'uk-gov-tweets-14289'
-storage_client = storage.Client.from_service_account_json('/Users/mdunford/data_science/ticker-twitter/data_collection/creds.json')
+storage_client = storage.Client()#.from_service_account_json('/Users/mdunford/data_science/ticker-twitter/data_collection/creds.json')
 bucket = storage_client.get_bucket(bucket_name)
 
 data = read_from_bucket(bucket=bucket)
