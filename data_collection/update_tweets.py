@@ -21,7 +21,7 @@ names_and_ids = read_from_bucket(bucket=bucket)
 names_and_ids = names_and_ids.groupby('user').max()['id'].reset_index()
 
 # # Use tweepy and the twitter API to collect the political tweets.
-data = tweet_grabber(names_and_ids, api, 30)
+data = tweets_update(names_and_ids, api, 30)
 
 
 # # Create a temp csv which is used to upload to bucket.
