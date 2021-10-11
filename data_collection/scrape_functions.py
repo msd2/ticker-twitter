@@ -43,8 +43,7 @@ def initial_tweet_scrape(names, api, number_of_tweets):
 
     """
     This queries tweets of the users passed as an argument.
-    The users have an associated ID which represented the latest
-    tweet already queried.
+    It is to grab a large number of tweets.
     """
 
     d = defaultdict(list)
